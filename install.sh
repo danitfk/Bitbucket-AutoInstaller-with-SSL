@@ -21,8 +21,6 @@ BITBUCKET_PLUGIN_MIRRORING_UPSTREAM="https://bitbucket.gordi.ir"
 BITBUCKET_SSL_CERTIFICATE_PASS="myrandomSSLpass"
 # Bitbucket archive URL
 BITBUCKET_URL="https://downloads.atlassian.com/software/stash/downloads/atlassian-bitbucket-5.15.1.tar.gz"
-BITBUCKET_MYSQL_DIRVER_REPO="https://dev.mysql.com/get/Downloads/Connector-J/"
-BITBUCKET_MYSQL_DRIVER_NAME="mysql-connector-java-8.0.13.tar.gz"
 # JDK 8 tar.gz Archive
 JAVA_REPOSITORY="https://ftp.weheartwebsites.de/linux/java/jdk/"
 JAVA_FILENAME="jdk-8u192-linux-x64.tar.gz"
@@ -114,7 +112,7 @@ else
 	sed -i "s|$ORIG_APT|$FAST_APT|g" /etc/apt/sources.list
 	apt-get update
 fi
-apt-get install -qy postfix mysql-server nano curl software-properties-common locales
+apt-get install -qy postfix  postgresql postgresql-contrib nano curl software-properties-common locales
 cd /usr/local/src
 wget -qO "bitbucket.tar.gz" "$BITBUCKET_URL"
 tar -xf bitbucket.tar.gz
@@ -130,16 +128,6 @@ apt-get update
 apt-get install -qy git
 }
 
-### Install MySQL Driver into bitbucket
-function mysql_driver_install {
-cd /tmp/
-wget -qO "$BITBUCKET_MYSQL_DRIVER_NAME" `echo "$BITBUCKET_MYSQL_DIRVER_REPO""$BITBUCKET_MYSQL_DRIVER_NAME"`
-tar -xf "$BITBUCKET_MYSQL_DRIVER_NAME"
-cd `echo "$BITBUCKET_MYSQL_DRIVER_NAME" | sed 's/.tar.gz//g'`
-mkdir -p $BITBUCKET_HOME/lib/
-cp `echo "$BITBUCKET_MYSQL_DRIVER_NAME" | sed 's/.tar.gz/.jar/g'` $BITBUCKET_HOME/lib/`echo "$BITBUCKET_MYSQL_DRIVER_NAME" | sed 's/.tar.gz/.jar/g'`
-echo "$(tput setaf 2)MySQL Driver Installed successfully. $(tput sgr 0)"
-}
 
 ### Create bitbucket user and home directory
 function user_permissions {
@@ -153,14 +141,6 @@ chown -R $BITBUCKET_USER:$BITBUCKET_USER $BITBUCKET_HOME
 }
 
 
-### Configure MySQL Database
-function mysql_configure {
-systemctl enable mysql > /dev/null 2>&1
-systemctl start mysql > /dev/null 2>&1
-echo "create database $BITBUCKET_DATABASE_NAME CHARACTER SET utf8 COLLATE utf8_bin;" | mysql -u'root'
-echo "grant all on $BITBUCKET_DATABASE_NAME.* to \"$BITBUCKET_DATABASE_USERNAME\"@localhost identified by \"$BITBUCKET_DATABASE_PASSWORD\";" | mysql -u'root'
-echo "FLUSH PRIVILEGES;" | mysql -u'root'
-}
 
 ### Install Let's Encrypt and Issue SSL certificate
 function install_letsencrypt { 
@@ -191,12 +171,13 @@ setup.sysadmin.username=$BITBUCKET_SYSADMIN_USER
 setup.sysadmin.password=$BITBUCKET_SYSADMIN_PASSWORD
 setup.sysadmin.displayName=$BITBUCKET_DATABASE_NAME="bitbucket"
 setup.sysadmin.emailAddress=$BITBUCKET_SYSADMIN_EMAIL_ADDRESS
-jdbc.driver=org.postgresql.Driver
+jdbc.driver=com.postgresql.jdbc.Drive
 jdbc.url=jdbc:postgresql://localhost:3306/$BITBUCKET_DATABASE_NAME
 jdbc.user=$BITBUCKET_DATABASE_USERNAME
 jdbc.password=$BITBUCKET_DATABASE_PASSWORD
 plugin.mirroring.upstream.url=$BITBUCKET_PLUGIN_MIRRORING_UPSTREAM
 server.port=443
+server.ssl.key-alias=$BITBUCKET_BASE_URL
 server.ssl.enabled=true
 server.scheme=https
 server.ssl.key-store-type=jks
@@ -216,8 +197,7 @@ bash $BITBUCKET_INSTALL_DIR/bin/start-bitbucket.sh > /dev/null 2>&1
 # 1) Install requirements, services and source
 # 2) Install Java JDK 8 
 # 3) Create user and set permissions
-# 4) Install MySQL Driver connector in Bitbucket
-# 5) Configure MySQL Database 
+# 5) Configure PostgreSQL Database 
 # 6) Install Let's Encrypt and Issue certificate
 # 7) Generate bitbucket.properties
 # 8) Start bitbucket service
@@ -230,8 +210,7 @@ echo "0) System health check running (Internet Connectivity, DNS, Hostname, Reso
 echo "1) Installing system requirements and download sources..." && requirements_install $(tput setaf 3) > /dev/null && echo "$(tput setaf 2)1) System Requirements installed successfully. $(tput sgr 0)"
 echo "2) Installing Oracle Java JDK 8 ..." &&  tput setaf 3 && java_install > /dev/null && echo "$(tput setaf 2)2) Oracle Java JDK 8 installed successfully. $(tput sgr 0)"
 echo "3) Create bitbucket user and set permissions..." &&   tput setaf 3 && user_permissions > /dev/null && echo "$(tput setaf 2)3) Bitbucket user created successfully. $(tput sgr 0)"
-echo "4) Install MySQL Driver into Bitbucket..." && tput setaf 3 && mysql_driver_install > /dev/null && echo "$(tput setaf 2)4) MySQL Driver Installed successfully. $(tput sgr 0)"
-echo "5) Configure MySQL Database..." &&  tput setaf 3 && mysql_configure > /dev/null && echo "$(tput setaf 2)5) MySQL Database configured successfully. $(tput sgr 0)"
+echo "5) Configure PostgreSQL Database..." &&  tput setaf 3 && postgres_configure > /dev/null && echo "$(tput setaf 2)5) PostgreSQL Database configured successfully. $(tput sgr 0)"
 echo "6) Install Let's Encrypt and Issue SSL..." &&  tput setaf 3 && install_letsencrypt > /dev/null && echo "$(tput setaf 2)6) Let's Encrypt install and SSL certificate issued successfully. $(tput sgr 0)"
 echo "7) Generate Bitbucket system properties file..." &&  tput setaf 3 && generate_properties > /dev/null && echo "$(tput setaf 2)7) BitBucket properties file generated successfully. $(tput sgr 0)"
 echo "8) Start bitbucket service..." &&  tput setaf 3 && start_bitbucket > /dev/null && echo "$(tput setaf 2)8) Bitbucket started successfully and you can access to the server with these details:" ;echo "URL: https://$BITBUCKET_BASE_URL:8443" ; echo "Username: $BITBUCKET_SYSADMIN_USER" ; echo "Password: $BITBUCKET_SYSADMIN_PASSWORD $(tput sgr 0)"
