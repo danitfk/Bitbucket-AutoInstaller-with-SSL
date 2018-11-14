@@ -136,7 +136,7 @@ echo "FLUSH PRIVILEGES;" | mysql -u'root'
 }
 
 ### Install Let's Encrypt and Issue SSL certificate
-function { 
+function install_letsencrypt { 
 add-apt-repository ppa:certbot/certbot
 apt-get update
 apt-get install -qy certbot
@@ -146,6 +146,7 @@ SSL_CERT_FILE=`echo "$SSL_DIRECTORY""cert.pem"`
 SSL_KEY_FILE=`echo "$SSL_DIRECTORY""privkey.pem"`
 SSL_CHAIN_FILE=`echo "$SSL_DIRECTORY""chain.pem"`
 SSL_FULLCHAIN_FILE=`echo "$SSL_DIRECTORY""fullchain.pem"`
+
 }
 # Flow:
 # 0) Run System Health check
@@ -168,5 +169,5 @@ echo "2) Installing Oracle Java JDK 8 ..." && java_install && echo "$(tput setaf
 echo "3) Create bitbucket user and set permissions..." &&  user_permissions && echo "$(tput setaf 2)3) Bitbucket user created successfully. $(tput sgr 0)"
 echo "4) Install MySQL Driver into Bitbucket..." &&  mysql_dirver_install && echo "$(tput setaf 2)4) MySQL Driver Installed successfully. $(tput sgr 0)"
 echo "5) Configure MySQL Database..." &&  mysql_configure && echo "$(tput setaf 2)5) MySQL Database configured successfully. $(tput sgr 0)"
-
+echo "6) Install Let's Encrypt and Issue SSL..." &&  install_letsencrypt && echo "$(tput setaf 2)6) Let's Encrypt install and SSL certificate issued successfully. $(tput sgr 0)"
 
