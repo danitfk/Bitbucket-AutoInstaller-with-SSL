@@ -172,7 +172,7 @@ setup.sysadmin.password=$BITBUCKET_SYSADMIN_PASSWORD
 setup.sysadmin.displayName=$BITBUCKET_DATABASE_NAME="bitbucket"
 setup.sysadmin.emailAddress=$BITBUCKET_SYSADMIN_EMAIL_ADDRESS
 jdbc.driver=com.postgresql.jdbc.Drive
-jdbc.url=jdbc:postgresql://localhost:3306/$BITBUCKET_DATABASE_NAME
+jdbc.url=jdbc:postgresql://localhost:5432/$BITBUCKET_DATABASE_NAME
 jdbc.user=$BITBUCKET_DATABASE_USERNAME
 jdbc.password=$BITBUCKET_DATABASE_PASSWORD
 plugin.mirroring.upstream.url=$BITBUCKET_PLUGIN_MIRRORING_UPSTREAM
@@ -189,6 +189,10 @@ EOL
 
 }
 
+function configure_postgresql {
+sudo -u postgres bash -c "psql -c \"CREATE ROLE $BITBUCKET_DATABASE_USERNAME WITH LOGIN PASSWORD '$BITBUCKET_DATABASE_PASSWORD' VALID UNTIL 'infinity';\""
+sudo -u postgres bash -c "psql -c \"CREATE DATABASE $BITBUCKET_DATABASE_NAME WITH ENCODING='UTF8' OWNER=$BITBUCKET_DATABASE_USERNAME CONNECTION LIMIT=-1;\""
+}
 function start_bitbucket {
 bash $BITBUCKET_INSTALL_DIR/bin/start-bitbucket.sh > /dev/null 2>&1
 }
