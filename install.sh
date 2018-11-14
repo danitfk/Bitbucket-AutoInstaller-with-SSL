@@ -17,6 +17,7 @@ BITBUCKET_DATABASE_NAME="bitbucket"
 BITBUCKET_DATABASE_USERNAME="bitbucketusernameDB2018"
 BITBUCKET_DATABASE_PASSWORD="bitbucketpasswordDB2018"
 BITBUCKET_PLUGIN_MIRRORING_UPSTREAM="https://bitbucket.gordi.ir"
+BITBUCKET_SSL_CERTIFICATE_PASS="myrandomSSLpass"
 # Bitbucket archive URL
 BITBUCKET_URL="https://downloads.atlassian.com/software/stash/downloads/atlassian-bitbucket-5.15.1.tar.gz"
 BITBUCKET_MYSQL_DIRVER_REPO="https://dev.mysql.com/get/Downloads/Connector-J/"
@@ -154,6 +155,12 @@ SSL_CERT_FILE=`echo "$SSL_DIRECTORY""cert.pem"`
 SSL_KEY_FILE=`echo "$SSL_DIRECTORY""privkey.pem"`
 SSL_CHAIN_FILE=`echo "$SSL_DIRECTORY""chain.pem"`
 SSL_FULLCHAIN_FILE=`echo "$SSL_DIRECTORY""fullchain.pem"`
+# Create Java keystore from Let's encrypt
+cd $SSL_DIRECTORY
+openssl pkcs12 -export -in fullchain.pem -inkey privkey.pem -out pkcs.p12 -name $BITBUCKET_BASE_URL -passin pass:$BITBUCKET_SSL_CERTIFICATE_PASS -passout pass:$BITBUCKET_SSL_CERTIFICATE_PASS > /dev/null 2>&1
+keytool -importkeystore -deststorepass $BITBUCKET_SSL_CERTIFICATE_PASS -destkeypass  $BITBUCKET_SSL_CERTIFICATE_PASS  -destkeystore $BITBUCKET_BASE_URL.jks -srckeystore pkcs.p12 -srcstoretype PKCS12 -srcstorepass $BITBUCKET_SSL_CERTIFICATE_PASS -alias $BITBUCKET_BASE_URL > /dev/null 2>&1
+SSL_JKS_FILE=`echo "$SSL_DIRECTORY""$BITBUCKET_BASE_URL"".jks"`
+
 }
 function generate_propertiese {
 
@@ -175,9 +182,9 @@ jdbc.password=$BITBUCKET_DATABASE_PASSWORD
 plugin.mirroring.upstream.url=$BITBUCKET_PLUGIN_MIRRORING_UPSTREAM
 server.port=8443
 server.ssl.enabled=true
-server.ssl.key-store=/path/to/keystore/bitbucket.jks
-server.ssl.key-store-password=<password value>
-server.ssl.key-password=<password value>
+server.ssl.key-store=$SSL_JKS_FILE
+server.ssl.key-store-password=$BITBUCKET_SSL_CERTIFICATE_PASS
+server.ssl.key-password=$BITBUCKET_SSL_CERTIFICATE_PASS
 EOL
 
 }
