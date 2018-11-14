@@ -8,7 +8,7 @@ BITBUCKET_USER="bitbucket"
 BITBUCKET_INSTALL_DIR="/opt/bitbucket"
 BITBUCKET_HOME="/var/bitbucket/"
 BITBUCKET_DISPLAY_NAME="Your Bitbucket"
-BITBUCKET_BASE_URL="bitbucket.gordi.ir"
+BITBUCKET_BASE_URL="bity.gordi.ir"
 BITBUCKET_LICENSE=""
 BITBUCKET_SYSADMIN_USER="superuser"
 BITBUCKET_SYSADMIN_PASSWORD="logmein2018@@"
@@ -17,7 +17,7 @@ BITBUCKET_SYSADMIN_EMAIL_ADDRESS="superuser@mydomain.tld"
 BITBUCKET_DATABASE_NAME="bitbucket"
 BITBUCKET_DATABASE_USERNAME="bitbucketusernameDB2018"
 BITBUCKET_DATABASE_PASSWORD="bitbucketpasswordDB2018"
-BITBUCKET_PLUGIN_MIRRORING_UPSTREAM="https://bitbucket.gordi.ir"
+BITBUCKET_PLUGIN_MIRRORING_UPSTREAM="https://bity.gordi.ir"
 BITBUCKET_SSL_CERTIFICATE_PASS="myrandomSSLpass"
 # Bitbucket archive URL
 BITBUCKET_URL="https://downloads.atlassian.com/software/stash/downloads/atlassian-bitbucket-5.15.1.tar.gz"
@@ -193,7 +193,7 @@ function postgres_configure {
 sudo -u postgres createuser $BITBUCKET_DATABASE_USERNAME
 cat > /tmp/create_user.psql << EOL
 CREATE ROLE $BITBUCKET_DATABASE_USERNAME WITH LOGIN PASSWORD '$BITBUCKET_DATABASE_PASSWORD' VALID UNTIL 'infinity';
-CREATE DATABASE $BITBUCKET_DATABASE_NAME WITH ENCODING='UTF8' OWNER=$BITBUCKET_DATABASE_USERNAME CONNECTION LIMIT=-1;
+CREATE DATABASE $BITBUCKET_DATABASE_NAME WITH OWNER=$BITBUCKET_DATABASE_USERNAME CONNECTION LIMIT=-1;
 EOL
 chmod 777 /tmp/create_user.psql
 cat > /etc/postgresql/*/main/pg_hba.conf << EOL
@@ -214,10 +214,10 @@ bash $BITBUCKET_INSTALL_DIR/bin/start-bitbucket.sh > /dev/null 2>&1
 # 1) Install requirements, services and source
 # 2) Install Java JDK 8 
 # 3) Create user and set permissions
-# 5) Configure PostgreSQL Database 
-# 6) Install Let's Encrypt and Issue certificate
-# 7) Generate bitbucket.properties
-# 8) Start bitbucket service
+# 4) Configure PostgreSQL Database 
+# 5) Install Let's Encrypt and Issue certificate
+# 6) Generate bitbucket.properties
+# 7) Start bitbucket service
 
 
 
@@ -230,5 +230,5 @@ echo "3) Create bitbucket user and set permissions..." &&   tput setaf 3 && user
 echo "4) Configure PostgreSQL Database..." &&  tput setaf 3 && postgres_configure > /dev/null && echo "$(tput setaf 2)4) PostgreSQL Database configured successfully. $(tput sgr 0)"
 echo "5) Install Let's Encrypt and Issue SSL..." &&  tput setaf 3 && install_letsencrypt > /dev/null && echo "$(tput setaf 2)5) Let's Encrypt install and SSL certificate issued successfully. $(tput sgr 0)"
 echo "6) Generate Bitbucket system properties file..." &&  tput setaf 3 && generate_properties > /dev/null && echo "$(tput setaf 2)6) BitBucket properties file generated successfully. $(tput sgr 0)"
-echo "7) Start bitbucket service..." &&  tput setaf 3 && start_bitbucket > /dev/null && echo "$(tput setaf 2)7) Bitbucket started successfully and you can access to the server with these details:" ;echo "URL: https://$BITBUCKET_BASE_URL:8443" ; echo "Username: $BITBUCKET_SYSADMIN_USER" ; echo "Password: $BITBUCKET_SYSADMIN_PASSWORD $(tput sgr 0)"
+echo "7) Start bitbucket service..." &&  tput setaf 3 && start_bitbucket > /dev/null && echo "$(tput setaf 2)7) Bitbucket started successfully and you can access to the server with these details:" ;echo "URL: https://$BITBUCKET_BASE_URL" ; echo "Username: $BITBUCKET_SYSADMIN_USER" ; echo "Password: $BITBUCKET_SYSADMIN_PASSWORD $(tput sgr 0)"
 
