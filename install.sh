@@ -97,7 +97,7 @@ else
 	sed -i "s|$ORIG_APT|$FAST_APT|g" /etc/apt/sources.list
 	apt-get update
 fi
-apt-get install -qy git postfix mysql-server nano curl
+apt-get install -qy git postfix mysql-server nano curl software-properties-common
 cd /usr/local/src
 wget -O "bitbucket.tar.gz" "$BITBUCKET_URL"
 tar -xf bitbucket.tar.gz
@@ -125,6 +125,8 @@ usermod -a -G sudo $BITBUCKET_USER
 
 }
 
+
+### Configure MySQL Database
 function mysql_configure {
 systemctl enable mysql-server
 systemctl start mysql-server
@@ -133,8 +135,11 @@ echo "grant all on $BITBUCKET_DATABASE_NAME.* to \"$BITBUCKET_DATABASE_USERNAME\
 echo "FLUSH PRIVILEGES;" | mysql -u'root'
 }
 
+### Install Let's Encrypt and Issue SSL certificate
+function { 
+add-apt-repository ppa:certbot/certbot
 
-
+}
 # Flow:
 # 0) Run System Health check
 # 1) Install requirements, services and source
