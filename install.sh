@@ -93,7 +93,7 @@ update-alternatives --install /usr/bin/javadoc javadoc /opt/java/bin/javadoc 1
 update-alternatives --install /usr/bin/jarsigner jarsigner /opt/java/bin/jarsigner 1
 update-alternatives --install /usr/bin/keytool keytool /opt/java/bin/keytool 1
 export JAVA_HOME="/opt/java/"
-echo 'JAVA_HOME="/opt/java/"' >> /etc/environment"
+echo 'JAVA_HOME="/opt/java/"' >> /etc/environment
 echo 'JAVA_HOME="/opt/java/"' >> ~/.bashrc
 }
 ### Install System requirements with package manager and download sources
