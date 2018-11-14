@@ -1,6 +1,6 @@
 #!/bin/bash
-#Author: Daniel Gordi (danitfk)
-#Date: 14/Nov/2018
+# Author: Daniel Gordi (danitfk)
+# Date: 14/Nov/2018
 
 ### VARIABLES ####
 # BITBUCKET Installation variables (must change by user)
@@ -52,6 +52,7 @@ then
 		echo "System IP and Domain got matched."
 	else
 		echo "System IP and Domain not matched."
+		exit 1
 	fi
 	
 else
@@ -63,6 +64,7 @@ else
 		echo "System IP and Domain got matched."
 	else
 		echo "System IP and Domain not matched."
+		exit 1
 	fi
 	
 fi
@@ -131,14 +133,16 @@ echo "grant all on $BITBUCKET_DATABASE_NAME.* to \"$BITBUCKET_DATABASE_USERNAME\
 echo "FLUSH PRIVILEGES;" | mysql -u'root'
 }
 
+
+
 # Flow:
-# 0) System Health check
+# 0) Run System Health check
 # 1) Install requirements, services and source
 # 2) Install Java JDK 8 
 # 3) Create user and set permissions
 # 4) Install MySQL Driver connector in Bitbucket
 # 5) Configure MySQL Database 
-# 6)
+# 6) Install Let's Encrypt and Issue certificate
 # 6)
 # 6)
 
