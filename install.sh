@@ -40,6 +40,32 @@ else
   echo "ERROR!! -> There is some problem in Internet connectivity or system DNS."
   exit 1
 fi
+SYSTEM_IP=`ifconfig | grep inet | awk {'print $2'} | grep -Ev "127.0.0.1|:"`
+
+printf "Your Public IP address is $SYSTEM_IP? (y/n) "
+read answer
+if [[ "$answer" == "y" ]] 
+then
+	DOMAIN_IP=`dig $BITBUCKET_BASE_URL +short @8.8.8.8`
+	if [[ "$DOMAIN_IP" == "$SYSTEM_IP" ]]
+	then
+		echo "System IP and Domain got matched."
+	else
+		echo "System IP and Domain not matched."
+	fi
+	
+else
+	printf "Please Enter your correct Public IP of Server. (Must match with domain)"
+	read answer
+	DOMAIN_IP=`dig $BITBUCKET_BASE_URL +short @8.8.8.8`
+	if [[ "$DOMAIN_IP" == "$answer" ]]
+	then
+		echo "System IP and Domain got matched."
+	else
+		echo "System IP and Domain not matched."
+	fi
+	
+fi
 
 }
 ### Install Oracle Java 8
