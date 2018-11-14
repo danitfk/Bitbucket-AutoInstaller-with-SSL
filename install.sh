@@ -132,8 +132,8 @@ usermod -a -G sudo $BITBUCKET_USER
 
 ### Configure MySQL Database
 function mysql_configure {
-systemctl enable mysql
-systemctl start mysql
+systemctl enable mysql > /dev/null 2>&1
+systemctl start mysql > /dev/null 2>&1
 echo "create database $BITBUCKET_DATABASE_NAME CHARACTER SET utf8 COLLATE utf8_bin;" | mysql -u'root'
 echo "grant all on $BITBUCKET_DATABASE_NAME.* to \"$BITBUCKET_DATABASE_USERNAME\"@localhost identified by \"$BITBUCKET_DATABASE_PASSWORD\";" | mysql -u'root'
 echo "FLUSH PRIVILEGES;" | mysql -u'root'
