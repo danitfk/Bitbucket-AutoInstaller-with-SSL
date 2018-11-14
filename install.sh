@@ -138,7 +138,7 @@ echo "FLUSH PRIVILEGES;" | mysql -u'root'
 
 ### Install Let's Encrypt and Issue SSL certificate
 function install_letsencrypt { 
-add-apt-repository ppa:certbot/certbot
+add-apt-repository ppa:certbot/certbot -y
 apt-get update
 apt-get install -qy certbot
 certbot certonly --standalone --preferred-challenges http --agree-tos --email $BITBUCKET_SYSADMIN_EMAIL_ADDRESS -d $BITBUCKET_BASE_URL --non-interactive
