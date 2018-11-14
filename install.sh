@@ -27,10 +27,18 @@ JAVA_FILENAME="jdk-8u192-linux-x64.tar.gz"
 ###################
 
 function system_health_check {
+# Check sudo access or root user
 if [ "$(whoami)" != "root" ]; then
         echo "ERROR! "
 	echo "You have to run this script by root user or sudo command"
         exit 1
+fi
+# Check network connectivity
+if ping -q -c 1 -W 1 google.com >/dev/null; then
+  echo "The Internet connectivity and system DNS is OK."
+else
+  echo "ERROR!! -> There is some problem in Internet connectivity or system DNS."
+  exit 1
 fi
 
 }
