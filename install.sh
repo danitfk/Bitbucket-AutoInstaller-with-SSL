@@ -45,9 +45,10 @@ wget http://ftp.au.debian.org/debian/pool/main/n/netselect/netselect_0.3.ds1-26_
 dpkg -i netselect_0.3.ds1-26_amd64.deb
 FAST_APT=`sudo netselect -s 20 -t 40 $(wget -qO - mirrors.ubuntu.com/mirrors.txt) | tail -n1 | grep -o http.*`
 if [[ $FAST_APT == "" ]];
+then
 	echo "Cannot find fastest mirror of apt."
 	echo "Continue with default mirror"
-	else
+else
 	ORIG_APT=`cat /etc/apt/sources.list | grep deb | awk {'print $2'} | uniq | head -n1`
 	sed -i "s|$ORIG_APT|$FAST_APT|g" /etc/apt/sources.list
 	apt-get update
