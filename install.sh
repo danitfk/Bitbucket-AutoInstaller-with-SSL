@@ -26,7 +26,15 @@ JAVA_REPOSITORY="https://ftp.weheartwebsites.de/linux/java/jdk/"
 JAVA_FILENAME="jdk-8u192-linux-x64.tar.gz"
 ###################
 
+function system_health_check {
+if [ "$(whoami)" != "root" ]; then
+        echo "ERROR! "
+	echo "You have to run this script by root user or sudo command"
+        exit 1
+fi
 
+}
+### Install Oracle Java 8
 function java_install {
 cd /opt/
 wget `echo "$JAVA_REPOSITORY""$JAVA_FILENAME"`
@@ -86,21 +94,29 @@ systemctl enable mysql-server
 systemctl start mysql-server
 echo "create database $BITBUCKET_DATABASE_NAME CHARACTER SET utf8 COLLATE utf8_bin;" | mysql -u'root'
 echo "grant all on $BITBUCKET_DATABASE_NAME.* to \"$BITBUCKET_DATABASE_USERNAME\"@localhost identified by \"$BITBUCKET_DATABASE_PASSWORD\";" | mysql -u'root'
+echo "FLUSH PRIVILEGES;" | mysql -u'root'
 }
 
 # Flow:
+# 0) System Health check
 # 1) Install requirements, services and source
 # 2) Install Java JDK 8 
 # 3) Create user and set permissions
 # 4) Install MySQL Driver connector in Bitbucket
 # 5) Configure MySQL Database 
-# 4)
+# 6)
+# 6)
+# 6)
+
+
 
 # non-interactive apt
 export DEBIAN_FRONTEND=noninteractive
-
+echo "0) System health check running (Internet Connectivity, DNS, Hostname, Resolve Domain)..." && requirements_install && echo "$(tput setaf 2)0) Everything is alright.. $(tput sgr 0)"
 echo "1) Installing system requirements and download sources..." && requirements_install && echo "$(tput setaf 2)1) System Requirements installed successfully. $(tput sgr 0)"
 echo "2) Installing Oracle Java JDK 8 ..." && java_install && echo "$(tput setaf 2)2) Oracle Java JDK 8 installed successfully. $(tput sgr 0)"
 echo "3) Create bitbucket user and set permissions..." &&  user_permissions && echo "$(tput setaf 2)3) Bitbucket user created successfully. $(tput sgr 0)"
 echo "4) Install MySQL Driver into Bitbucket..." &&  mysql_dirver_install && echo "$(tput setaf 2)4) MySQL Driver Installed successfully. $(tput sgr 0)"
+echo "5) Configure MySQL Database..." &&  mysql_configure && echo "$(tput setaf 2)5) MySQL Database configured successfully. $(tput sgr 0)"
+
 
