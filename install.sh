@@ -150,7 +150,7 @@ SSL_FULLCHAIN_FILE=`echo "$SSL_DIRECTORY""fullchain.pem"`
 }
 
 function configure_bitbucket_tomcat {
-
+echo "Here is some command"
 }
 # Flow:
 # 0) Run System Health check
