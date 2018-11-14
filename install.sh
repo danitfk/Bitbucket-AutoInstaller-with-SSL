@@ -80,6 +80,7 @@ update-alternatives --install /usr/bin/java java /opt/java/bin/java 1
 update-alternatives --install /usr/bin/javac javac /opt/java/bin/javac 1
 update-alternatives --install /usr/bin/javadoc javadoc /opt/java/bin/javadoc 1
 update-alternatives --install /usr/bin/jarsigner jarsigner /opt/java/bin/jarsigner 1
+update-alternatives --install /usr/bin/keytool keytool /opt/java/bin/keytool 1
 export JAVA_HOME="/opt/java/"
 echo 'JAVA_HOME="/opt/java/" >> /etc/environment"'
 }
@@ -172,7 +173,11 @@ jdbc.url=jdbc:postgresql://localhost:3306/$BITBUCKET_DATABASE_NAME
 jdbc.user=$BITBUCKET_DATABASE_USERNAME
 jdbc.password=$BITBUCKET_DATABASE_PASSWORD
 plugin.mirroring.upstream.url=$BITBUCKET_PLUGIN_MIRRORING_UPSTREAM
-
+server.port=8443
+server.ssl.enabled=true
+server.ssl.key-store=/path/to/keystore/bitbucket.jks
+server.ssl.key-store-password=<password value>
+server.ssl.key-password=<password value>
 EOL
 
 }
