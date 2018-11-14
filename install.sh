@@ -154,7 +154,28 @@ SSL_KEY_FILE=`echo "$SSL_DIRECTORY""privkey.pem"`
 SSL_CHAIN_FILE=`echo "$SSL_DIRECTORY""chain.pem"`
 SSL_FULLCHAIN_FILE=`echo "$SSL_DIRECTORY""fullchain.pem"`
 }
+function generate_propertiese {
 
+cat > $BITBUCKET_HOME  << EOL
+BITBUCKET_DATABASE_USERNAME="bitbucketusernameDB2018"
+BITBUCKET_DATABASE_PASSWORD="bitbucketpasswordDB2018"
+BITBUCKET_PLUGIN_MIRRORING_UPSTREAM="https://bitbucket.gordi.ir"
+setup.displayName=$BITBUCKET_DISPLAY_NAME
+setup.baseUrl=$BITBUCKET_BASE_URL
+setup.license=$BITBUCKET_LICENSE
+setup.sysadmin.username=$BITBUCKET_SYSADMIN_USER
+setup.sysadmin.password=$BITBUCKET_SYSADMIN_PASSWORD
+setup.sysadmin.displayName=$BITBUCKET_DATABASE_NAME="bitbucket"
+setup.sysadmin.emailAddress=$BITBUCKET_SYSADMIN_EMAIL_ADDRESS
+jdbc.driver=org.postgresql.Driver
+jdbc.url=jdbc:postgresql://localhost:3306/$BITBUCKET_DATABASE_NAME
+jdbc.user=$BITBUCKET_DATABASE_USERNAME
+jdbc.password=$BITBUCKET_DATABASE_PASSWORD
+plugin.mirroring.upstream.url=$BITBUCKET_PLUGIN_MIRRORING_UPSTREAM
+
+EOL
+
+}
 function configure_bitbucket_tomcat {
 echo "Here is some command"
 }
