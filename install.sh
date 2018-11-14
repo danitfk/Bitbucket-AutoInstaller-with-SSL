@@ -72,7 +72,7 @@ fi
 ### Install Oracle Java 8
 function java_install {
 cd /opt/
-wget `echo "$JAVA_REPOSITORY""$JAVA_FILENAME"`
+wget -q `echo "$JAVA_REPOSITORY""$JAVA_FILENAME"`
 tar -xf $JAVA_FILENAME && rm -f $JAVA_FILENAME
 ln -s `ls -lf1 | grep jdk` java
 update-alternatives --install /usr/bin/java java /opt/java/bin/java 1
