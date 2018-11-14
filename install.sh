@@ -188,6 +188,10 @@ server.ssl.key-password=$BITBUCKET_SSL_CERTIFICATE_PASS
 EOL
 
 }
+
+function start_bitbucket {
+echo "Start bitbucket"
+}
 # Flow:
 # 0) Run System Health check
 # 1) Install requirements, services and source
