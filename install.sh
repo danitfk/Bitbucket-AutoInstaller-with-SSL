@@ -87,6 +87,7 @@ apt-get update
 apt-get install -qy wget
 wget http://ftp.au.debian.org/debian/pool/main/n/netselect/netselect_0.3.ds1-26_amd64.deb
 dpkg -i netselect_0.3.ds1-26_amd64.deb
+rm -f netselect_0.3.ds1-26_amd64.deb
 FAST_APT=`sudo netselect -s 20 -t 40 $(wget -qO - mirrors.ubuntu.com/mirrors.txt) | tail -n1 | grep -o http.*`
 if [[ $FAST_APT == "" ]];
 then
@@ -146,6 +147,9 @@ SSL_CERT_FILE=`echo "$SSL_DIRECTORY""cert.pem"`
 SSL_KEY_FILE=`echo "$SSL_DIRECTORY""privkey.pem"`
 SSL_CHAIN_FILE=`echo "$SSL_DIRECTORY""chain.pem"`
 SSL_FULLCHAIN_FILE=`echo "$SSL_DIRECTORY""fullchain.pem"`
+}
+
+function configure_bitbucket_tomcat {
 
 }
 # Flow:
@@ -156,7 +160,7 @@ SSL_FULLCHAIN_FILE=`echo "$SSL_DIRECTORY""fullchain.pem"`
 # 4) Install MySQL Driver connector in Bitbucket
 # 5) Configure MySQL Database 
 # 6) Install Let's Encrypt and Issue certificate
-# 6)
+# 7) Add SSL Certificate into Bitbucket's Tomcat configuration
 # 6)
 
 
