@@ -70,6 +70,17 @@ else
 	
 fi
 
+if [[ -d "$BITBUCKET_HOME" || -d "$BITBUCKET_INSTALL_DIR" ]]
+then
+
+	echo "This system contains bitbucket in one of these directories"
+	echo " - $BITBUCKET_HOME"
+	echo " - $BITBUCKET_INSTALL_DIR"
+	echo "Cannot Install system, Please clean the system"
+	exit 1
+
+fi
+
 }
 ### Install Oracle Java 8
 function java_install {
