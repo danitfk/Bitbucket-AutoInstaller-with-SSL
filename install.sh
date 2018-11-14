@@ -182,8 +182,8 @@ SSL_JKS_FILE=`echo "$SSL_DIRECTORY""$BITBUCKET_BASE_URL"".jks"`
 
 }
 function generate_properties {
-
-cat > $BITBUCKET_HOME/bitbucket.properties  << EOL
+mkdir -p $BITBUCKET_HOME/shared
+cat > $BITBUCKET_HOME/shared/bitbucket.properties  << EOL
 setup.displayName=$BITBUCKET_DISPLAY_NAME
 setup.baseUrl=$BITBUCKET_BASE_URL
 setup.license=$BITBUCKET_LICENSE
