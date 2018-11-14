@@ -112,6 +112,7 @@ rm -rf $BITBUCKET_DIR_NAME
 locale-gen "en_US.UTF-8"
 update-locale LC_ALL="en_US.UTF-8"
 export LC_ALL=en_US.UTF-8
+export BITBUCKET_HOME=/opt/bitbucket
 }
 
 ### Install MySQL Driver into bitbucket
@@ -164,7 +165,7 @@ SSL_JKS_FILE=`echo "$SSL_DIRECTORY""$BITBUCKET_BASE_URL"".jks"`
 }
 function generate_properties {
 
-cat > $BITBUCKET_HOME  << EOL
+cat > $BITBUCKET_HOME/bitbucket.properties  << EOL
 BITBUCKET_DATABASE_USERNAME="bitbucketusernameDB2018"
 BITBUCKET_DATABASE_PASSWORD="bitbucketpasswordDB2018"
 BITBUCKET_PLUGIN_MIRRORING_UPSTREAM="https://bitbucket.gordi.ir"
