@@ -193,8 +193,8 @@ function postgres_configure {
 sudo -u postgres bash -c "psql -c \"CREATE ROLE $BITBUCKET_DATABASE_USERNAME WITH LOGIN PASSWORD '$BITBUCKET_DATABASE_PASSWORD' VALID UNTIL 'infinity';\""
 sudo -u postgres bash -c "psql -c \"CREATE DATABASE $BITBUCKET_DATABASE_NAME WITH ENCODING='UTF8' OWNER=$BITBUCKET_DATABASE_USERNAME CONNECTION LIMIT=-1;\""
 sed  -i "s|local   all             postgres                                peer|local   all             postgres                                md5|g" /etc/postgresql/*/main/pg_hba.conf
-systemctl restart postgresql
-systemctl enable postgresql
+systemctl restart postgresql > /dev/null 2>&1
+systemctl enable postgresql > /dev/null 2>&1
 }
 function start_bitbucket {
 bash $BITBUCKET_INSTALL_DIR/bin/start-bitbucket.sh > /dev/null 2>&1
