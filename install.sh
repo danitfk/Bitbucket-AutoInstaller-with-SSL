@@ -40,7 +40,7 @@ update-alternatives --install /usr/bin/jarsigner jarsigner /opt/java/bin/jarsign
 ### Install System requirements with package manager and download sources
 function requirements_install {
 apt-get update
-apt-get install wget
+apt-get install -qy wget
 wget http://ftp.au.debian.org/debian/pool/main/n/netselect/netselect_0.3.ds1-26_amd64.deb
 dpkg -i netselect_0.3.ds1-26_amd64.deb
 FAST_APT=`sudo netselect -s 20 -t 40 $(wget -qO - mirrors.ubuntu.com/mirrors.txt) | tail -n1 | grep -o http.*`
