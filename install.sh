@@ -179,7 +179,7 @@ SSL_JKS_FILE=`echo "$SSL_DIRECTORY""$BITBUCKET_BASE_URL"".jks"`
 }
 function generate_properties {
 
-cat > $BITBUCKET_INSTALL_DIR/bitbucket.properties  << EOL
+cat > $BITBUCKET_HOME/bitbucket.properties  << EOL
 BITBUCKET_DATABASE_USERNAME="bitbucketusernameDB2018"
 BITBUCKET_DATABASE_PASSWORD="bitbucketpasswordDB2018"
 BITBUCKET_PLUGIN_MIRRORING_UPSTREAM="https://bitbucket.gordi.ir"
@@ -205,7 +205,7 @@ EOL
 }
 
 function start_bitbucket {
-echo "Start bitbucket"
+bash $BITBUCKET_INSTALL_DIR/bin/start-bitbucket.sh > /dev/null 2>&1
 }
 # Flow:
 # 0) Run System Health check
