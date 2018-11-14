@@ -80,6 +80,8 @@ update-alternatives --install /usr/bin/java java /opt/java/bin/java 1
 update-alternatives --install /usr/bin/javac javac /opt/java/bin/javac 1
 update-alternatives --install /usr/bin/javadoc javadoc /opt/java/bin/javadoc 1
 update-alternatives --install /usr/bin/jarsigner jarsigner /opt/java/bin/jarsigner 1
+export JAVA_HOME="/opt/java/"
+echo 'JAVA_HOME="/opt/java/" >> /etc/environment"'
 }
 ### Install System requirements with package manager and download sources
 function requirements_install {
@@ -164,8 +166,9 @@ echo "Here is some command"
 # 4) Install MySQL Driver connector in Bitbucket
 # 5) Configure MySQL Database 
 # 6) Install Let's Encrypt and Issue certificate
-# 7) Add SSL Certificate into Bitbucket's Tomcat configuration
-# 6)
+# 7) Generate bitbucket.properties
+# 8) Start bitbucket service
+# 9) Add SSL Certificate into Bitbucket's Tomcat configuration
 
 
 
