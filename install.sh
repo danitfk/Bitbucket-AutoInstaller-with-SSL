@@ -72,6 +72,7 @@ fi
 ### Install Oracle Java 8
 function java_install {
 cd /opt/
+rm -rf $JAVA_FILENAME java `ls -lf1 | grep jdk`
 wget -q `echo "$JAVA_REPOSITORY""$JAVA_FILENAME"`
 tar -xf $JAVA_FILENAME && rm -f $JAVA_FILENAME
 ln -s `ls -lf1 | grep jdk` java
@@ -131,8 +132,8 @@ usermod -a -G sudo $BITBUCKET_USER
 
 ### Configure MySQL Database
 function mysql_configure {
-systemctl enable mysql-server
-systemctl start mysql-server
+systemctl enable mysql
+systemctl start mysql
 echo "create database $BITBUCKET_DATABASE_NAME CHARACTER SET utf8 COLLATE utf8_bin;" | mysql -u'root'
 echo "grant all on $BITBUCKET_DATABASE_NAME.* to \"$BITBUCKET_DATABASE_USERNAME\"@localhost identified by \"$BITBUCKET_DATABASE_PASSWORD\";" | mysql -u'root'
 echo "FLUSH PRIVILEGES;" | mysql -u'root'
@@ -140,7 +141,7 @@ echo "FLUSH PRIVILEGES;" | mysql -u'root'
 
 ### Install Let's Encrypt and Issue SSL certificate
 function install_letsencrypt { 
-add-apt-repository ppa:certbot/certbot -y > /dev/null
+add-apt-repository ppa:certbot/certbot -y > /dev/null 2>&1
 apt-get update
 apt-get install -qy certbot
 certbot certonly --standalone --preferred-challenges http --agree-tos --email $BITBUCKET_SYSADMIN_EMAIL_ADDRESS -d $BITBUCKET_BASE_URL --non-interactive
