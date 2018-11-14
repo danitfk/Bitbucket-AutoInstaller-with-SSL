@@ -40,8 +40,7 @@ else
   echo "ERROR!! -> There is some problem in Internet connectivity or system DNS."
   exit 1
 fi
-SYSTEM_IP=`ifconfig | grep inet | awk {'print $2'} | grep -Ev "127.0.0.1|:"`
-
+SYSTEM_IP=`ifconfig | grep inet | awk {'print $2'} | cut -d":" -f2 | grep -Ev "127.0.0.1|:"`
 printf "Your Public IP address is $SYSTEM_IP? (y/n) "
 read answer
 if [[ "$answer" == "y" ]] 
