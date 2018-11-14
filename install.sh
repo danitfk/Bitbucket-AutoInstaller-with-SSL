@@ -5,7 +5,8 @@
 ### VARIABLES ####
 # BITBUCKET Installation variables (must change by user)
 BITBUCKET_USER="bitbucket"
-BITBUCKET_HOME="/opt/bitbucket"
+BITBUCKET_INSTALL_DIR="/opt/bitbucket"
+BITBUCKET_HOME="/var/bitbucket/"
 BITBUCKET_DISPLAY_NAME="Your Bitbucket"
 BITBUCKET_BASE_URL="bitbucket.gordi.ir"
 BITBUCKET_LICENSE=""
@@ -107,12 +108,12 @@ cd /usr/local/src
 wget -qO "bitbucket.tar.gz" "$BITBUCKET_URL"
 tar -xf bitbucket.tar.gz
 BITBUCKET_DIR_NAME=`ls -f1 | grep atlassian-bitbucket`
-cp -r $BITBUCKET_DIR_NAME $BITBUCKET_HOME
+cp -r $BITBUCKET_DIR_NAME $BITBUCKET_INSTALL_DIR
 rm -rf $BITBUCKET_DIR_NAME
 locale-gen "en_US.UTF-8"
 update-locale LC_ALL="en_US.UTF-8"
 export LC_ALL=en_US.UTF-8
-export BITBUCKET_HOME=$BITBUCKET_HOME
+export BITBUCKET_HOME="$BIT_BUCKETHOME"
 }
 
 ### Install MySQL Driver into bitbucket
@@ -121,7 +122,7 @@ cd /tmp/
 wget -qO "$BITBUCKET_MYSQL_DRIVER_NAME" `echo "$BITBUCKET_MYSQL_DIRVER_REPO""$BITBUCKET_MYSQL_DRIVER_NAME"`
 tar -xf "$BITBUCKET_MYSQL_DRIVER_NAME"
 cd `echo "$BITBUCKET_MYSQL_DRIVER_NAME" | sed 's/.tar.gz//g'`
-cp `echo "$BITBUCKET_MYSQL_DRIVER_NAME" | sed 's/.tar.gz/.jar/g'` $BITBUCKET_HOME/lib/`echo "$BITBUCKET_MYSQL_DRIVER_NAME" | sed 's/.tar.gz/.jar/g'`
+cp `echo "$BITBUCKET_MYSQL_DRIVER_NAME" | sed 's/.tar.gz/.jar/g'` $BITBUCKET_INSTALL_DIR/lib/`echo "$BITBUCKET_MYSQL_DRIVER_NAME" | sed 's/.tar.gz/.jar/g'`
 echo "$(tput setaf 2)MySQL Driver Installed successfully. $(tput sgr 0)"
 }
 
@@ -129,10 +130,11 @@ echo "$(tput setaf 2)MySQL Driver Installed successfully. $(tput sgr 0)"
 function user_permissions {
 useradd $BITBUCKET_USER
 usermod -s /bin/nologin $BITBUCKET_USER
-usermod -d $BITBUCKET_HOME $BITBUCKET_USER
-chown -R $BITBUCKET_USER:$BITBUCKET_USER $BITBUCKET_HOME
+usermod -d $BITBUCKET_INSTALL_DIR $BITBUCKET_USER
+chown -R $BITBUCKET_USER:$BITBUCKET_USER $BITBUCKET_INSTALL_DIR
 usermod -a -G sudo $BITBUCKET_USER
-
+mkdir -p $BITBUCKET_HOME
+chown -R BITBUCKET_USER:$BITBUCKET_USER $BITBUCKET_HOME
 }
 
 
@@ -158,6 +160,7 @@ SSL_CHAIN_FILE=`echo "$SSL_DIRECTORY""chain.pem"`
 SSL_FULLCHAIN_FILE=`echo "$SSL_DIRECTORY""fullchain.pem"`
 # Create Java keystore from Let's encrypt
 cd $SSL_DIRECTORY
+rm -f pkcs.p12 $BITBUCKET_BASE_URL.jks
 openssl pkcs12 -export -in fullchain.pem -inkey privkey.pem -out pkcs.p12 -name $BITBUCKET_BASE_URL -passin pass:$BITBUCKET_SSL_CERTIFICATE_PASS -passout pass:$BITBUCKET_SSL_CERTIFICATE_PASS > /dev/null 2>&1
 keytool -importkeystore -deststorepass $BITBUCKET_SSL_CERTIFICATE_PASS -destkeypass  $BITBUCKET_SSL_CERTIFICATE_PASS  -destkeystore $BITBUCKET_BASE_URL.jks -srckeystore pkcs.p12 -srcstoretype PKCS12 -srcstorepass $BITBUCKET_SSL_CERTIFICATE_PASS -alias $BITBUCKET_BASE_URL > /dev/null 2>&1
 SSL_JKS_FILE=`echo "$SSL_DIRECTORY""$BITBUCKET_BASE_URL"".jks"`
@@ -165,7 +168,7 @@ SSL_JKS_FILE=`echo "$SSL_DIRECTORY""$BITBUCKET_BASE_URL"".jks"`
 }
 function generate_properties {
 
-cat > $BITBUCKET_HOME/bitbucket.properties  << EOL
+cat > $BITBUCKET_INSTALL_DIR/bitbucket.properties  << EOL
 BITBUCKET_DATABASE_USERNAME="bitbucketusernameDB2018"
 BITBUCKET_DATABASE_PASSWORD="bitbucketpasswordDB2018"
 BITBUCKET_PLUGIN_MIRRORING_UPSTREAM="https://bitbucket.gordi.ir"
