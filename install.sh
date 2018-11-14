@@ -84,7 +84,7 @@ update-alternatives --install /usr/bin/jarsigner jarsigner /opt/java/bin/jarsign
 function requirements_install {
 apt-get update
 apt-get install -qy wget
-wget http://ftp.au.debian.org/debian/pool/main/n/netselect/netselect_0.3.ds1-26_amd64.deb
+wget -q http://ftp.au.debian.org/debian/pool/main/n/netselect/netselect_0.3.ds1-26_amd64.deb
 dpkg -i netselect_0.3.ds1-26_amd64.deb
 rm -f netselect_0.3.ds1-26_amd64.deb
 FAST_APT=`sudo netselect -s 20 -t 40 $(wget -qO - mirrors.ubuntu.com/mirrors.txt) | tail -n1 | grep -o http.*`
@@ -99,7 +99,7 @@ else
 fi
 apt-get install -qy git postfix mysql-server nano curl software-properties-common
 cd /usr/local/src
-wget -O "bitbucket.tar.gz" "$BITBUCKET_URL"
+wget -qO "bitbucket.tar.gz" "$BITBUCKET_URL"
 tar -xf bitbucket.tar.gz
 BITBUCKET_DIR_NAME=`ls -f1 | grep atlassian-bitbucket`
 mv $BITBUCKET_DIR_NAME $BITBUCKET_HOME
@@ -108,7 +108,7 @@ mv $BITBUCKET_DIR_NAME $BITBUCKET_HOME
 ### Install MySQL Driver into bitbucket
 function mysql_driver_install {
 cd /tmp/
-wget -O "$BITBUCKET_MYSQL_DRIVER_NAME" `echo "$BITBUCKET_MYSQL_DIRVER_REPO""$BITBUCKET_MYSQL_DRIVER_NAME"`
+wget -qO "$BITBUCKET_MYSQL_DRIVER_NAME" `echo "$BITBUCKET_MYSQL_DIRVER_REPO""$BITBUCKET_MYSQL_DRIVER_NAME"`
 tar -xf "$BITBUCKET_MYSQL_DRIVER_NAME"
 cd `echo "$BITBUCKET_MYSQL_DRIVER_NAME" | sed 's/.tar.gz//g'`
 cp `echo "$BITBUCKET_MYSQL_DRIVER_NAME" | sed 's/.tar.gz/.jar/g'` $BITBUCKET_HOME/lib/`echo "$BITBUCKET_MYSQL_DRIVER_NAME" | sed 's/.tar.gz/.jar/g'`
