@@ -93,7 +93,8 @@ update-alternatives --install /usr/bin/javadoc javadoc /opt/java/bin/javadoc 1
 update-alternatives --install /usr/bin/jarsigner jarsigner /opt/java/bin/jarsigner 1
 update-alternatives --install /usr/bin/keytool keytool /opt/java/bin/keytool 1
 export JAVA_HOME="/opt/java/"
-echo 'JAVA_HOME="/opt/java/" >> /etc/environment"'
+echo 'JAVA_HOME="/opt/java/"' >> /etc/environment"
+echo 'JAVA_HOME="/opt/java/"' >> ~/.bashrc
 }
 ### Install System requirements with package manager and download sources
 function requirements_install {
@@ -123,6 +124,8 @@ locale-gen "en_US.UTF-8"
 update-locale LC_ALL="en_US.UTF-8"
 export LC_ALL=en_US.UTF-8
 export BITBUCKET_HOME="$BITBUCKET_HOME"
+echo 'BITBUCKET_HOME="$BITBUCKET_HOME"' >> /etc/environment
+echo 'BITBUCKET_HOME="$BITBUCKET_HOME"'  >> ~/.bashrc
 apt-add-repository ppa:git-core/ppa -y > /dev/null 2>&1
 apt-get update
 apt-get install -qy git
