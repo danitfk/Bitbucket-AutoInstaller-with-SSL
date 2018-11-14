@@ -190,6 +190,9 @@ EOL
 }
 
 function postgres_configure {
+sed  -i "s|local   all             postgres                                peer|local   all             postgres                                md5|g"
+systemctl restart postgresql
+systemctl enable postgresql
 sudo -u postgres bash -c "psql -c \"CREATE ROLE $BITBUCKET_DATABASE_USERNAME WITH LOGIN PASSWORD '$BITBUCKET_DATABASE_PASSWORD' VALID UNTIL 'infinity';\""
 sudo -u postgres bash -c "psql -c \"CREATE DATABASE $BITBUCKET_DATABASE_NAME WITH ENCODING='UTF8' OWNER=$BITBUCKET_DATABASE_USERNAME CONNECTION LIMIT=-1;\""
 }
