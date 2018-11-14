@@ -104,7 +104,7 @@ apt-get install -qy wget
 wget -q http://ftp.au.debian.org/debian/pool/main/n/netselect/netselect_0.3.ds1-26_amd64.deb
 dpkg -i netselect_0.3.ds1-26_amd64.deb
 rm -f netselect_0.3.ds1-26_amd64.deb
-FAST_APT=`sudo netselect -s 20 -t 40 $(wget -qO - mirrors.ubuntu.com/mirrors.txt) | tail -n1 | grep -o http.*`
+FAST_APT=`netselect -s 20 -t 40 $(wget -qO - mirrors.ubuntu.com/mirrors.txt) | tail -n1 | grep -o http.*`
 if [[ $FAST_APT == "" ]];
 then
 	echo "Cannot find fastest mirror of apt."
@@ -114,7 +114,7 @@ else
 	sed -i "s|$ORIG_APT|$FAST_APT|g" /etc/apt/sources.list
 	apt-get update
 fi
-apt-get install -qy git postfix mysql-server nano curl software-properties-common locales
+apt-get install -qy postfix mysql-server nano curl software-properties-common locales
 cd /usr/local/src
 wget -qO "bitbucket.tar.gz" "$BITBUCKET_URL"
 tar -xf bitbucket.tar.gz
@@ -125,6 +125,9 @@ locale-gen "en_US.UTF-8"
 update-locale LC_ALL="en_US.UTF-8"
 export LC_ALL=en_US.UTF-8
 export BITBUCKET_HOME="$BITBUCKET_HOME"
+apt-add-repository ppa:git-core/ppa > /dev/null 2>&1
+apt-get update
+apt-get install -qy git
 }
 
 ### Install MySQL Driver into bitbucket
