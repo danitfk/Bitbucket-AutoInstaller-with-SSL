@@ -52,7 +52,7 @@ if [[ $FAST_APT == "" ]];
 	sed -i "s|$ORIG_APT|$FAST_APT|g" /etc/apt/sources.list
 	apt-get update
 fi
-apt-get install -qy git postfix mysql-server
+apt-get install -qy git postfix mysql-server nano curl
 function requirements_download {
 cd /usr/local/src
 wget -O "bitbucket.tar.gz" "$BITBUCKET_URL"
@@ -85,6 +85,7 @@ mysql_configure {
 systemctl enable mysql-server
 systemctl start mysql-server
 echo "create database $BITBUCKET_DATABASE_NAME;" | mysql -u'root'
+echo "grant all on $BITBUCKET_DATABASE_NAME.* to \"$BITBUCKET_DATABASE_USERNAME\"@localhost identified by \"$BITBUCKET_DATABASE_PASSWORD\";" | mysql -u'root'
 }
 
 # Flow:
