@@ -103,7 +103,8 @@ cd /usr/local/src
 wget -qO "bitbucket.tar.gz" "$BITBUCKET_URL"
 tar -xf bitbucket.tar.gz
 BITBUCKET_DIR_NAME=`ls -f1 | grep atlassian-bitbucket`
-mv $BITBUCKET_DIR_NAME $BITBUCKET_HOME
+cp -r $BITBUCKET_DIR_NAME $BITBUCKET_HOME
+rm -rf $BITBUCKET_DIR_NAME
 locale-gen "en_US.UTF-8"
 update-locale LC_ALL="en_US.UTF-8"
 export LC_ALL=en_US.UTF-8
