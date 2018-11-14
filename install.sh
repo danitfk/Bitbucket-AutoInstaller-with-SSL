@@ -190,13 +190,13 @@ EOL
 }
 
 function postgres_configure {
-cat > /tmp/create_user.psql << EOL
 sudo -u postgres createuser $BITBUCKET_DATABASE_USERNAME
+cat > /tmp/create_user.psql << EOL
 CREATE ROLE $BITBUCKET_DATABASE_USERNAME WITH LOGIN PASSWORD '$BITBUCKET_DATABASE_PASSWORD' VALID UNTIL 'infinity';
 CREATE DATABASE $BITBUCKET_DATABASE_NAME WITH ENCODING='UTF8' OWNER=$BITBUCKET_DATABASE_USERNAME CONNECTION LIMIT=-1;
 EOL
 chmod 777 /tmp/create_user.psql
-cat >> /etc/postgresql/*/main/pg_hba.conf << EOL
+cat > /etc/postgresql/*/main/pg_hba.conf << EOL
 local   all             postgres                                trust
 local   all             all                                     trust
 host    all             all             127.0.0.1/32            trust
