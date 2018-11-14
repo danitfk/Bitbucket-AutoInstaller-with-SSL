@@ -136,7 +136,8 @@ cd /tmp/
 wget -qO "$BITBUCKET_MYSQL_DRIVER_NAME" `echo "$BITBUCKET_MYSQL_DIRVER_REPO""$BITBUCKET_MYSQL_DRIVER_NAME"`
 tar -xf "$BITBUCKET_MYSQL_DRIVER_NAME"
 cd `echo "$BITBUCKET_MYSQL_DRIVER_NAME" | sed 's/.tar.gz//g'`
-cp `echo "$BITBUCKET_MYSQL_DRIVER_NAME" | sed 's/.tar.gz/.jar/g'` $BITBUCKET_INSTALL_DIR/lib/`echo "$BITBUCKET_MYSQL_DRIVER_NAME" | sed 's/.tar.gz/.jar/g'`
+mkdir -p $BITBUCKET_HOME/lib/
+cp `echo "$BITBUCKET_MYSQL_DRIVER_NAME" | sed 's/.tar.gz/.jar/g'` $BITBUCKET_HOME/lib/`echo "$BITBUCKET_MYSQL_DRIVER_NAME" | sed 's/.tar.gz/.jar/g'`
 echo "$(tput setaf 2)MySQL Driver Installed successfully. $(tput sgr 0)"
 }
 
@@ -183,9 +184,6 @@ SSL_JKS_FILE=`echo "$SSL_DIRECTORY""$BITBUCKET_BASE_URL"".jks"`
 function generate_properties {
 
 cat > $BITBUCKET_HOME/bitbucket.properties  << EOL
-BITBUCKET_DATABASE_USERNAME="bitbucketusernameDB2018"
-BITBUCKET_DATABASE_PASSWORD="bitbucketpasswordDB2018"
-BITBUCKET_PLUGIN_MIRRORING_UPSTREAM="https://bitbucket.gordi.ir"
 setup.displayName=$BITBUCKET_DISPLAY_NAME
 setup.baseUrl=$BITBUCKET_BASE_URL
 setup.license=$BITBUCKET_LICENSE
@@ -198,8 +196,11 @@ jdbc.url=jdbc:postgresql://localhost:3306/$BITBUCKET_DATABASE_NAME
 jdbc.user=$BITBUCKET_DATABASE_USERNAME
 jdbc.password=$BITBUCKET_DATABASE_PASSWORD
 plugin.mirroring.upstream.url=$BITBUCKET_PLUGIN_MIRRORING_UPSTREAM
-server.port=8443
+server.port=443
 server.ssl.enabled=true
+server.scheme=https
+server.ssl.key-store-type=jks
+server.ssl.protocol=TLSv1.2
 server.ssl.key-store=$SSL_JKS_FILE
 server.ssl.key-store-password=$BITBUCKET_SSL_CERTIFICATE_PASS
 server.ssl.key-password=$BITBUCKET_SSL_CERTIFICATE_PASS
