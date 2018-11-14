@@ -171,7 +171,7 @@ setup.sysadmin.username=$BITBUCKET_SYSADMIN_USER
 setup.sysadmin.password=$BITBUCKET_SYSADMIN_PASSWORD
 setup.sysadmin.displayName=$BITBUCKET_DATABASE_NAME="bitbucket"
 setup.sysadmin.emailAddress=$BITBUCKET_SYSADMIN_EMAIL_ADDRESS
-jdbc.driver=com.postgresql.jdbc.Drive
+jdbc.driver=org.postgresql.Driver
 jdbc.url=jdbc:postgresql://localhost:5432/$BITBUCKET_DATABASE_NAME
 jdbc.user=$BITBUCKET_DATABASE_USERNAME
 jdbc.password=$BITBUCKET_DATABASE_PASSWORD
@@ -214,8 +214,8 @@ echo "0) System health check running (Internet Connectivity, DNS, Hostname, Reso
 echo "1) Installing system requirements and download sources..." && requirements_install $(tput setaf 3) > /dev/null && echo "$(tput setaf 2)1) System Requirements installed successfully. $(tput sgr 0)"
 echo "2) Installing Oracle Java JDK 8 ..." &&  tput setaf 3 && java_install > /dev/null && echo "$(tput setaf 2)2) Oracle Java JDK 8 installed successfully. $(tput sgr 0)"
 echo "3) Create bitbucket user and set permissions..." &&   tput setaf 3 && user_permissions > /dev/null && echo "$(tput setaf 2)3) Bitbucket user created successfully. $(tput sgr 0)"
-echo "5) Configure PostgreSQL Database..." &&  tput setaf 3 && postgres_configure > /dev/null && echo "$(tput setaf 2)5) PostgreSQL Database configured successfully. $(tput sgr 0)"
-echo "6) Install Let's Encrypt and Issue SSL..." &&  tput setaf 3 && install_letsencrypt > /dev/null && echo "$(tput setaf 2)6) Let's Encrypt install and SSL certificate issued successfully. $(tput sgr 0)"
-echo "7) Generate Bitbucket system properties file..." &&  tput setaf 3 && generate_properties > /dev/null && echo "$(tput setaf 2)7) BitBucket properties file generated successfully. $(tput sgr 0)"
-echo "8) Start bitbucket service..." &&  tput setaf 3 && start_bitbucket > /dev/null && echo "$(tput setaf 2)8) Bitbucket started successfully and you can access to the server with these details:" ;echo "URL: https://$BITBUCKET_BASE_URL:8443" ; echo "Username: $BITBUCKET_SYSADMIN_USER" ; echo "Password: $BITBUCKET_SYSADMIN_PASSWORD $(tput sgr 0)"
+echo "4) Configure PostgreSQL Database..." &&  tput setaf 3 && postgres_configure > /dev/null && echo "$(tput setaf 2)4) PostgreSQL Database configured successfully. $(tput sgr 0)"
+echo "5) Install Let's Encrypt and Issue SSL..." &&  tput setaf 3 && install_letsencrypt > /dev/null && echo "$(tput setaf 2)5) Let's Encrypt install and SSL certificate issued successfully. $(tput sgr 0)"
+echo "6) Generate Bitbucket system properties file..." &&  tput setaf 3 && generate_properties > /dev/null && echo "$(tput setaf 2)6) BitBucket properties file generated successfully. $(tput sgr 0)"
+echo "7) Start bitbucket service..." &&  tput setaf 3 && start_bitbucket > /dev/null && echo "$(tput setaf 2)7) Bitbucket started successfully and you can access to the server with these details:" ;echo "URL: https://$BITBUCKET_BASE_URL:8443" ; echo "Username: $BITBUCKET_SYSADMIN_USER" ; echo "Password: $BITBUCKET_SYSADMIN_PASSWORD $(tput sgr 0)"
 
