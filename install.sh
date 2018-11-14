@@ -54,7 +54,6 @@ else
 	apt-get update
 fi
 apt-get install -qy git postfix mysql-server nano curl
-function requirements_download {
 cd /usr/local/src
 wget -O "bitbucket.tar.gz" "$BITBUCKET_URL"
 tar -xf bitbucket.tar.gz
