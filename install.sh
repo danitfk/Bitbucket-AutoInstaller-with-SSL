@@ -125,7 +125,7 @@ locale-gen "en_US.UTF-8"
 update-locale LC_ALL="en_US.UTF-8"
 export LC_ALL=en_US.UTF-8
 export BITBUCKET_HOME="$BITBUCKET_HOME"
-apt-add-repository ppa:git-core/ppa > /dev/null 2>&1
+apt-add-repository ppa:git-core/ppa -y > /dev/null 2>&1
 apt-get update
 apt-get install -qy git
 }
