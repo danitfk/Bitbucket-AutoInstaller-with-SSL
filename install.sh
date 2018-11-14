@@ -95,6 +95,9 @@ echo "create database $BITBUCKET_DATABASE_NAME;" | mysql -u'root'
 # 5) Configure MySQL Database 
 # 4)
 
+# non-interactive apt
+export DEBIAN_FRONTEND=noninteractive
+
 echo "1) Installing system requirements and download sources..." && requirements_install && echo "$(tput setaf 2)1) System Requirements installed successfully. $(tput sgr 0)"
 echo "2) Installing Oracle Java JDK 8 ..." && java_install && echo "$(tput setaf 2)2) Oracle Java JDK 8 installed successfully. $(tput sgr 0)"
 echo "3) Create bitbucket user and set permissions..." &&  user_permissions && echo "$(tput setaf 2)3) Bitbucket user created successfully. $(tput sgr 0)"
