@@ -190,9 +190,19 @@ EOL
 }
 
 function postgres_configure {
-sudo -u postgres bash -c "psql -c \"CREATE ROLE $BITBUCKET_DATABASE_USERNAME WITH LOGIN PASSWORD '$BITBUCKET_DATABASE_PASSWORD' VALID UNTIL 'infinity';\""
-sudo -u postgres bash -c "psql -c \"CREATE DATABASE $BITBUCKET_DATABASE_NAME WITH ENCODING='UTF8' OWNER=$BITBUCKET_DATABASE_USERNAME CONNECTION LIMIT=-1;\""
-sed  -i "s|local   all             postgres                                peer|local   all             postgres                                md5|g" /etc/postgresql/*/main/pg_hba.conf
+cat > /tmp/create_user.psql << EOL
+sudo -u postgres createuser $BITBUCKET_DATABASE_USERNAME
+CREATE ROLE $BITBUCKET_DATABASE_USERNAME WITH LOGIN PASSWORD '$BITBUCKET_DATABASE_PASSWORD' VALID UNTIL 'infinity';
+CREATE DATABASE $BITBUCKET_DATABASE_NAME WITH ENCODING='UTF8' OWNER=$BITBUCKET_DATABASE_USERNAME CONNECTION LIMIT=-1;
+EOL
+chmod 777 /tmp/create_user.psql
+cat >> /etc/postgresql/*/main/pg_hba.conf << EOL
+local   all             postgres                                trust
+local   all             all                                     trust
+host    all             all             127.0.0.1/32            trust
+host    all             all             ::1/128                 md5
+EOL
+su postgres -c "psql < /tmp/create_user.psql"
 systemctl restart postgresql > /dev/null 2>&1
 systemctl enable postgresql > /dev/null 2>&1
 }
