@@ -97,12 +97,15 @@ else
 	sed -i "s|$ORIG_APT|$FAST_APT|g" /etc/apt/sources.list
 	apt-get update
 fi
-apt-get install -qy git postfix mysql-server nano curl software-properties-common
+apt-get install -qy git postfix mysql-server nano curl software-properties-common locales
 cd /usr/local/src
 wget -qO "bitbucket.tar.gz" "$BITBUCKET_URL"
 tar -xf bitbucket.tar.gz
 BITBUCKET_DIR_NAME=`ls -f1 | grep atlassian-bitbucket`
 mv $BITBUCKET_DIR_NAME $BITBUCKET_HOME
+locale-gen "en_US.UTF-8"
+update-locale LC_ALL="en_US.UTF-8"
+export LC_ALL=en_US.UTF-8
 }
 
 ### Install MySQL Driver into bitbucket
@@ -137,7 +140,7 @@ echo "FLUSH PRIVILEGES;" | mysql -u'root'
 
 ### Install Let's Encrypt and Issue SSL certificate
 function install_letsencrypt { 
-add-apt-repository ppa:certbot/certbot -y
+add-apt-repository ppa:certbot/certbot -y > /dev/null
 apt-get update
 apt-get install -qy certbot
 certbot certonly --standalone --preferred-challenges http --agree-tos --email $BITBUCKET_SYSADMIN_EMAIL_ADDRESS -d $BITBUCKET_BASE_URL --non-interactive
