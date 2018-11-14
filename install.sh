@@ -162,7 +162,7 @@ keytool -importkeystore -deststorepass $BITBUCKET_SSL_CERTIFICATE_PASS -destkeyp
 SSL_JKS_FILE=`echo "$SSL_DIRECTORY""$BITBUCKET_BASE_URL"".jks"`
 
 }
-function generate_propertiese {
+function generate_properties {
 
 cat > $BITBUCKET_HOME  << EOL
 BITBUCKET_DATABASE_USERNAME="bitbucketusernameDB2018"
@@ -188,9 +188,6 @@ server.ssl.key-password=$BITBUCKET_SSL_CERTIFICATE_PASS
 EOL
 
 }
-function configure_bitbucket_tomcat {
-echo "Here is some command"
-}
 # Flow:
 # 0) Run System Health check
 # 1) Install requirements, services and source
@@ -201,7 +198,6 @@ echo "Here is some command"
 # 6) Install Let's Encrypt and Issue certificate
 # 7) Generate bitbucket.properties
 # 8) Start bitbucket service
-# 9) Add SSL Certificate into Bitbucket's Tomcat configuration
 
 
 
@@ -214,4 +210,6 @@ echo "3) Create bitbucket user and set permissions..." &&   tput setaf 3 && user
 echo "4) Install MySQL Driver into Bitbucket..." && tput setaf 3 && mysql_driver_install > /dev/null && echo "$(tput setaf 2)4) MySQL Driver Installed successfully. $(tput sgr 0)"
 echo "5) Configure MySQL Database..." &&  tput setaf 3 && mysql_configure > /dev/null && echo "$(tput setaf 2)5) MySQL Database configured successfully. $(tput sgr 0)"
 echo "6) Install Let's Encrypt and Issue SSL..." &&  tput setaf 3 && install_letsencrypt > /dev/null && echo "$(tput setaf 2)6) Let's Encrypt install and SSL certificate issued successfully. $(tput sgr 0)"
+echo "7) Generate Bitbucket system properties file..." &&  tput setaf 3 && generate_properties > /dev/null && echo "$(tput setaf 2)7) BitBucket properties file generated successfully. $(tput sgr 0)"
+echo "8) Start bitbucket service..." &&  tput setaf 3 && start_bitbucket > /dev/null && echo "$(tput setaf 2)8) Bitbucket started successfully and you can access to the server with these details:" ;echo "URL: https://$BITBUCKET_BASE_URL:8443" ; echo "Username: $BITBUCKET_SYSADMIN_USER" ; echo "Password: $BITBUCKET_SYSADMIN_PASSWORD $(tput sgr 0)"
 
