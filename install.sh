@@ -43,7 +43,7 @@ fi
 SYSTEM_IP=`ip route get 8.8.8.8 | sed -n 's|^.*src \(.*\)$|\1|gp' | awk {'print $1'} | head -n 1`
 printf "Your Public IP address is $SYSTEM_IP? (y/n) "
 read answer
-if [[ "$answer" == "y" ]] 
+if [[ "$answer" == "y" ]]
 then
 	DOMAIN_IP=`dig $BITBUCKET_BASE_URL +short @8.8.8.8`
 	if [[ "$DOMAIN_IP" == "$SYSTEM_IP" ]]
@@ -53,7 +53,7 @@ then
 		echo "System IP and Domain not matched."
 		exit 1
 	fi
-	
+
 else
 	printf "Please Enter your correct Public IP of Server. (Must match with domain)"
 	read answer
@@ -65,7 +65,7 @@ else
 		echo "System IP and Domain not matched."
 		exit 1
 	fi
-	
+
 fi
 
 if [[ -d "$BITBUCKET_HOME" || -d "$BITBUCKET_INSTALL_DIR" ]]
@@ -130,8 +130,6 @@ apt-add-repository ppa:git-core/ppa -y > /dev/null 2>&1
 apt-get update
 apt-get install -qy git
 }
-
-
 ### Create bitbucket user and home directory
 function user_permissions {
 useradd $BITBUCKET_USER
@@ -142,11 +140,8 @@ usermod -a -G sudo $BITBUCKET_USER
 mkdir -p $BITBUCKET_HOME
 chown -R $BITBUCKET_USER:$BITBUCKET_USER $BITBUCKET_HOME
 }
-
-
-
 ### Install Let's Encrypt and Issue SSL certificate
-function install_letsencrypt { 
+function install_letsencrypt {
 add-apt-repository ppa:certbot/certbot -y > /dev/null 2>&1
 apt-get update
 apt-get install -qy certbot
@@ -164,6 +159,7 @@ keytool -importkeystore -deststorepass $BITBUCKET_SSL_CERTIFICATE_PASS -destkeyp
 SSL_JKS_FILE=`echo "$SSL_DIRECTORY""$BITBUCKET_BASE_URL"".jks"`
 
 }
+### Generate properties file for BITBUCKET
 function generate_properties {
 mkdir -p $BITBUCKET_HOME/shared
 cat > $BITBUCKET_HOME/shared/bitbucket.properties  << EOL
@@ -191,7 +187,7 @@ server.ssl.key-password=$BITBUCKET_SSL_CERTIFICATE_PASS
 EOL
 
 }
-
+### Configure PostgreSQL for BITBUCKET
 function postgres_configure {
 sudo -u postgres createuser $BITBUCKET_DATABASE_USERNAME
 cat > /tmp/create_user.psql << EOL
@@ -209,22 +205,20 @@ su postgres -c "psql < /tmp/create_user.psql"
 systemctl restart postgresql > /dev/null 2>&1
 systemctl enable postgresql > /dev/null 2>&1
 }
+### START BITBUCKET SERVICE
 function start_bitbucket {
 bash $BITBUCKET_INSTALL_DIR/bin/start-bitbucket.sh > /dev/null 2>&1
 }
+####################################################
 # Flow:
 # 0) Run System Health check
 # 1) Install requirements, services and source
-# 2) Install Java JDK 8 
+# 2) Install Java JDK 8
 # 3) Create user and set permissions
-# 4) Configure PostgreSQL Database 
+# 4) Configure PostgreSQL Database
 # 5) Install Let's Encrypt and Issue certificate
 # 6) Generate bitbucket.properties
 # 7) Start bitbucket service
-
-
-
-# non-interactive apt
 export DEBIAN_FRONTEND=noninteractive
 echo "0) System health check running (Internet Connectivity, DNS, Hostname, Resolve Domain)..." && system_health_check && echo "$(tput setaf 2)0) Everything is alright.. $(tput sgr 0)"
 echo "1) Installing system requirements and download sources..." && requirements_install $(tput setaf 3) > /dev/null && echo "$(tput setaf 2)1) System Requirements installed successfully. $(tput sgr 0)"
@@ -234,4 +228,3 @@ echo "4) Configure PostgreSQL Database..." &&  tput setaf 3 && postgres_configur
 echo "5) Install Let's Encrypt and Issue SSL..." &&  tput setaf 3 && install_letsencrypt > /dev/null && echo "$(tput setaf 2)5) Let's Encrypt install and SSL certificate issued successfully. $(tput sgr 0)"
 echo "6) Generate Bitbucket system properties file..." &&  tput setaf 3 && generate_properties > /dev/null && echo "$(tput setaf 2)6) BitBucket properties file generated successfully. $(tput sgr 0)"
 echo "7) Start bitbucket service..." &&  tput setaf 3 && start_bitbucket > /dev/null && echo "$(tput setaf 2)7) Bitbucket started successfully and you can access to the server with these details:" ;echo "URL: https://$BITBUCKET_BASE_URL" ; echo "Username: $BITBUCKET_SYSADMIN_USER" ; echo "Password: $BITBUCKET_SYSADMIN_PASSWORD $(tput sgr 0)"
-
